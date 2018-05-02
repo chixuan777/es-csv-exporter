@@ -9,9 +9,11 @@
  * Credits: This extension is created using Extensionizr , github.com/uzairfarooq/arrive
  */
 
+
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-      //console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
+		//alert(sender.tab.url);
+      //alert(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
       if (request.msg == "store-csv"){
         var csvContents = request.data;
         var input = document.createElement('textarea');
@@ -35,6 +37,7 @@ chrome.runtime.onMessage.addListener(
 );
 
 function badgeOnOff(on) {
+
   if (on) {
     chrome.browserAction.setBadgeText({text: 'ON'});
   }

@@ -22,7 +22,7 @@ chrome.extension.sendMessage({}, function(response) {
         existing: true                       // Defaults to false. Setting it to true would ensure that the registered callback is fired for the elements that already exists in the DOM and match the selector. If options.onceOnly is set, the callback is only called once with the first element matching the selector.
       };
 
-      document.arrive(".button-group",options, function() {
+      document.arrive(".kuiLocalMenu",options, function() {
         var alreadyExists = document.getElementById("elastic-csv-exporter");
         if(!alreadyExists)
           injectCSVExportButton();
@@ -102,7 +102,7 @@ function createElement(type, attributes, innerHTML){
 }
 
 function createCSVButton(){
-  var csvInnerHTML = '<button title="Export to CSV" aria-haspopup="true" aria-expanded="false"  aria-label="Export CSV"> <p style="margin: 0;font-size: 12px;font-weight: 100;">CSV</p> </button>';
+  var csvInnerHTML = '<button title="Export to CSV" aria-haspopup="true" aria-expanded="false"  aria-label="Export CSV"> <p style="margin: 0;font-size: 12px;font-weight: 100; margin-left: 10px;">EXPORT-CSV</p> </button>';
   var csvElemAttributes = {"tooltip":"Export CSV", "tooltip-placement":"bottom", "tooltip-popup-delay":"400", "tooltip-append-to-body":"1", "text":"Export CSV", "placement":"bottom", "append-to-body":"1", "class":"ng-scope", "id":"elastic-csv-exporter"};
   var csvButton = createElement('span', csvElemAttributes, csvInnerHTML);
   csvButton.onclick = function(){
@@ -113,7 +113,7 @@ function createCSVButton(){
 
 
 function createMessageSlider(){
-  var wrapperDiv = createElement('div', {"style": "padding:10px 5px; background-color:#656a76; width:100% !important;", "id":"csv-message-wrapper"});
+  var wrapperDiv = createElement('div', {"style": "padding:10px 5px; background-color:#00ff00; width:100% !important;", "id":"csv-message-wrapper"});
   var messageBox = createElement('div', {"style": "float:right; margin-top:10px; line-height:2.5em;", "id":"csv-message-box"});
   wrapperDiv.appendChild(messageBox);
 
@@ -131,13 +131,13 @@ function createMessageSlider(){
 
 
   var copyToDriveHTML = '<button aria-expanded="true" aria-label="Copy to Google Drive" style="border:1px solid #fff;margin-left: 10px;"><p style="margin: 0;font-size: 12px;font-weight:100;">Google Drive</p></button>';
-  var copyToDrive = createElement('span', {"title":"Copy to Google Drive"}, copyToDriveHTML);
-  copyToDrive.onclick = function(){
-    alert("Coming soon");
-  };
-  messageBox.appendChild(copyToDrive);
+  //var copyToDrive = createElement('span', {"title":"Copy to Google Drive"}, copyToDriveHTML);
+  //copyToDrive.onclick = function(){
+  //  alert("Coming soon");
+  //};
+  //messageBox.appendChild(copyToDrive);
 
-  var CloseHTML = '<button aria-expanded="true" aria-label="Close export slider"><p style="margin: 0;font-size: 12px;font-weight:100;">X</p></button>';
+  var CloseHTML = '<button aria-expanded="true" aria-label="Close export slider"><p style="margin: 0;font-size: 12px;font-weight:100;margin-left: 10px;">X</p></button>';
   var close = createElement('span', {"title":"Close export slider"}, CloseHTML);
   close.onclick = function(){
    closeMessageSlider();
