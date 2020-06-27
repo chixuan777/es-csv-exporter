@@ -12,3 +12,5 @@ Tested in Kibana 4.3.3 + ElasticSearch 2.2.x
 Tested in Kibana 4.3.1 + ElasticSearch 2.1.x
 
 Tested in Kibana 4.1.x + ElasticSearch 1.7.x
+
+TODO: Multi browser support using WebExtension API
