@@ -28,13 +28,28 @@ chrome.runtime.onMessage.addListener(
         input.remove();
 
         sendResponse({status: "success"});
-      }else if(request.msg == "badge"){
+      }else if (request.msg == "save-csv"){
+        var csvContents = request.data;
+        var downloadLink = document.createElement("a");
+        var fileName = getUniqFileName()
+        downloadLink.download = fileName
+        downloadLink.href = window.URL.createObjectURL(new Blob([csvContents], {type: "text/csv"}));
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        sendResponse({status: "success"});
+      } else if(request.msg == "badge") {
         badgeOnOff(request.data);
-      }else{
+      } else {
         sendResponse({status: "Unknown Message"});
       }
     }
 );
+
+function getUniqFileName() {
+  var nowMilli = Date.now();
+  return "kibana_doc_" + nowMilli + ".csv";
+}
 
 function badgeOnOff(on) {
 

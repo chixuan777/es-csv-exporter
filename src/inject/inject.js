@@ -89,6 +89,13 @@ function parseAndCopyToClipBoard(){
   });
 }
 
+function parseAndSaveAsFile(){
+  var csv = parseTable();
+   chrome.runtime.sendMessage({"msg": "save-csv", data: csv}, function(response) {
+     console.log("CSV Saved:", response.status);
+   });
+ }
+
 function createElement(type, attributes, innerHTML){
   var elem = document.createElement(type);
 
@@ -102,9 +109,9 @@ function createElement(type, attributes, innerHTML){
 }
 
 function createCSVButton(){
-  var csvInnerHTML = '<button title="Export to CSV" aria-haspopup="true" aria-expanded="false"  aria-label="Export CSV"> <p style="margin: 0;font-size: 12px;font-weight: 100; margin-left: 10px;">EXPORT-CSV</p> </button>';
-  var csvElemAttributes = {"tooltip":"Export CSV", "tooltip-placement":"bottom", "tooltip-popup-delay":"400", "tooltip-append-to-body":"1", "text":"Export CSV", "placement":"bottom", "append-to-body":"1", "class":"ng-scope", "id":"elastic-csv-exporter"};
-  var csvButton = createElement('span', csvElemAttributes, csvInnerHTML);
+  var csvInnerHTML = 'Export';
+  var csvElemAttributes = {"tooltip":"Export CSV", "tooltip-placement":"bottom", "aria-label":"Export","aria-expanded":"false","aria-disabled":"false","tooltip-popup-delay":"400", "tooltip-append-to-body":"1", "text":"Export CSV", "placement":"bottom", "append-to-body":"1", "class":"kuiLocalMenuItem", "id":"elastic-csv-exporter"};
+  var csvButton = createElement('button', csvElemAttributes, csvInnerHTML);
   csvButton.onclick = function(){
     injectMessageSlider();
   };
@@ -113,31 +120,29 @@ function createCSVButton(){
 
 
 function createMessageSlider(){
-  var wrapperDiv = createElement('div', {"style": "padding:10px 5px; background-color:#00ff00; width:100% !important;", "id":"csv-message-wrapper"});
-  var messageBox = createElement('div', {"style": "float:right; margin-top:10px; line-height:2.5em;", "id":"csv-message-box"});
+  var wrapperDiv = createElement('div', {"style": "padding:10px 5px; background-color:#e6f0f8; width:100% !important;", "id":"csv-message-wrapper"});
+  var messageBox = createElement('div', {"style": "margin-left: 30%", "id":"csv-message-box"});
   wrapperDiv.appendChild(messageBox);
 
-  var successText = "CSV Exporter: This will export only the visible query results.";
+  var successText = "CSV Exporter: This will export/save only the visible query results. Export to";
   var failureText = "Oops, CSV export failed.";
   messageBox.appendChild(createElement('span',null,successText));
 
-
-  var copyToClipboardHTML = '<button title="Copy to clipboard" aria-expanded="true"  aria-label="Copy to clipboard" style="border: 1px solid #fff;margin-left: 10px;"><p style="margin: 0;font-size: 12px;font-weight:100;">Copy to clipboard</p></button>';
+  var copyToClipboardHTML = '<button title="Copy to clipboard" aria-expanded="true" aria-label="Copy to clipboard" style="margin-left: 5px;"><p style="margin: 0;margin-right: 5px;color: #005570;font-size: 12px;font-weight:bold;">Clipboard</p></button>';
   var copyToClipboard = createElement('span', {"title":"Copy to clipboard"}, copyToClipboardHTML);
   copyToClipboard.onclick = function(){
     parseAndCopyToClipBoard();
   };
   messageBox.appendChild(copyToClipboard);
+  messageBox.appendChild(createElement('span', null,"or"));
+  var saveAsFileHTML = '<button title="Save as File" aria-expanded="true" aria-label="Save as File" style="margin-left: 0px;"><p style="margin: 0;margin-left: 5px;color: #005570;font-size: 12px;font-weight:bold;">File</p></button>';
+  var saveAsFile = createElement('span', {"title":"Save as File"}, saveAsFileHTML);
+  saveAsFile.onclick = function() {
+    parseAndSaveAsFile();
+  };
+  messageBox.appendChild(saveAsFile);
 
-
-  var copyToDriveHTML = '<button aria-expanded="true" aria-label="Copy to Google Drive" style="border:1px solid #fff;margin-left: 10px;"><p style="margin: 0;font-size: 12px;font-weight:100;">Google Drive</p></button>';
-  //var copyToDrive = createElement('span', {"title":"Copy to Google Drive"}, copyToDriveHTML);
-  //copyToDrive.onclick = function(){
-  //  alert("Coming soon");
-  //};
-  //messageBox.appendChild(copyToDrive);
-
-  var CloseHTML = '<button aria-expanded="true" aria-label="Close export slider"><p style="margin: 0;font-size: 12px;font-weight:100;margin-left: 10px;">X</p></button>';
+  var CloseHTML = '<button aria-expanded="true" aria-label="Close export slider"><p style="margin: 0;margin-left: 5px;font-size: 12px;color: #f44336;font-weight: bold;">X</p></button>';
   var close = createElement('span', {"title":"Close export slider"}, CloseHTML);
   close.onclick = function(){
    closeMessageSlider();
@@ -162,6 +167,7 @@ function injectMessageSlider(){
   var nav = getMessageSliderElement();
   if(nav) {
     nav.appendChild(div);
+    setTimeout(function(){ closeMessageSlider(); }, 10000);
   }
 }
 
@@ -176,15 +182,27 @@ function getMessageSliderElement(){
 
 function injectCSVExportButton() {
   var navbar = document.getElementsByTagName("navbar")[0];
-  var buttonGroup;
+  var menubar = document.getElementsByClassName("kuiLocalMenu");
+  var buttonGroup, menuType;
   if(navbar) {
     buttonGroup = navbar.getElementsByClassName("button-group")[0];
+  } else if (menubar.length == 2) {
+    buttonGroup = menubar[1];
+  } else if (menubar.length == 1) {
+    buttonGroup = menubar[0];
   } else {
     buttonGroup = document.getElementsByClassName("kuiLocalBreadcrumbs")[0];
   }
-  
+
   if(buttonGroup) {
     var span = createCSVButton();
-    buttonGroup.appendChild(span);
+    if (menubar.length == 2) {
+      buttonGroup.insertAdjacentElement('beforeBegin', span)
+    } else if (menubar.length == 1) {
+      buttonGroup.insertBefore(span, buttonGroup.firstChild);
+    }
+    else {
+      buttonGroup.appendChild(span);
+    }
   }
 }

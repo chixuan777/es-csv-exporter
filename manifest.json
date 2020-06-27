@@ -1,13 +1,14 @@
 {
-  "name": "ElasticSearch CSV Exporter",
-  "version": "0.5",
+  "name": "Kibana CSV Exporter",
+  "version": "0.6",
   "manifest_version": 2,
   "description": "Missing CSV export feature for Elasticsearch on Kibana Dashboard. Start exporting search results as CSV file from Kibana Discover.",
   "homepage_url": "http://minewhat.com/blog",
   "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "24": "icons/kibana-24.png",
+    "32": "icons/kibana-32.png",
+    "48": "icons/kibana-48.png",
+    "96": "icons/kibana-96.png"
   },
   "default_locale": "en",
   "background": {
@@ -15,7 +16,7 @@
     "persistent": true
   },
   "browser_action": {
-    "default_icon": "icons/icon19.png",
+    "default_icon": "icons/kibana-24.png",
     "default_title": "browser action demo",
     "default_popup": "src/browser_action/browser_action.html"
   },
